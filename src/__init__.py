@@ -1,0 +1,1 @@
+"""Console todo application package."""
