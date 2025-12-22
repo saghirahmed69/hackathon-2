@@ -243,24 +243,24 @@ This task list implements all 5 user stories for Phase II in priority order. Tas
 
 ### Backend - Update Service (Completion Toggle)
 
-- [ ] T088 [US3] Add update_task(task_id, user_id, updates) function to backend/app/services/task_service.py
-- [ ] T089 [US3] Add ownership verification in update_task (return None if user doesn't own task)
-- [ ] T090 [US3] Set updated_at timestamp on task update
+- [X] T088 [US3] Add update_task(task_id, user_id, updates) function to backend/app/services/task_service.py
+- [X] T089 [US3] Add ownership verification in update_task (return None if user doesn't own task)
+- [X] T090 [US3] Set updated_at timestamp on task update
 
 ### Backend - Update API (Completion Toggle)
 
-- [ ] T091 [US3] Implement PATCH /api/tasks/{task_id} endpoint in backend/app/api/tasks.py
-- [ ] T092 [US3] Add authentication check (JWT required)
-- [ ] T093 [US3] Add ownership check (return 403 if user doesn't own task, 404 if task not found)
-- [ ] T094 [US3] Handle partial updates (only update provided fields)
+- [X] T091 [US3] Implement PATCH /api/tasks/{task_id} endpoint in backend/app/api/tasks.py
+- [X] T092 [US3] Add authentication check (JWT required)
+- [X] T093 [US3] Add ownership check (return 403 if user doesn't own task, 404 if task not found)
+- [X] T094 [US3] Handle partial updates (only update provided fields)
 
 ### Frontend - Completion Toggle UI
 
-- [ ] T095 [US3] Add checkbox/toggle button to TaskItem component for completion status
-- [ ] T096 [US3] Add visual styling for completed tasks (strikethrough or color change)
-- [ ] T097 [US3] Implement PATCH /api/tasks/{id} call on checkbox click
-- [ ] T098 [US3] Add success notification after status change
-- [ ] T099 [US3] Update task list state optimistically
+- [X] T095 [US3] Add checkbox/toggle button to TaskItem component for completion status
+- [X] T096 [US3] Add visual styling for completed tasks (strikethrough or color change)
+- [X] T097 [US3] Implement PATCH /api/tasks/{id} call on checkbox click
+- [X] T098 [US3] Add success notification after status change
+- [X] T099 [US3] Update task list state optimistically
 
 ### US3 Validation
 
@@ -288,14 +288,14 @@ This task list implements all 5 user stories for Phase II in priority order. Tas
 
 ### Frontend - Edit Task UI
 
-- [ ] T103 [US4] Add edit button to TaskItem component
-- [ ] T104 [US4] Add edit mode state to TaskItem (toggle between view/edit)
-- [ ] T105 [US4] Add inline form inputs for title/description in edit mode
-- [ ] T106 [US4] Add Save and Cancel buttons in edit mode
-- [ ] T107 [US4] Implement PATCH /api/tasks/{id} call on Save with title/description updates
-- [ ] T108 [US4] Add client-side validation (title required)
-- [ ] T109 [US4] Add success notification after update
-- [ ] T110 [US4] Revert to view mode on Cancel (discard changes)
+- [X] T103 [US4] Add edit button to TaskItem component
+- [X] T104 [US4] Add edit mode state to TaskItem (toggle between view/edit)
+- [X] T105 [US4] Add inline form inputs for title/description in edit mode
+- [X] T106 [US4] Add Save and Cancel buttons in edit mode
+- [X] T107 [US4] Implement PATCH /api/tasks/{id} call on Save with title/description updates
+- [X] T108 [US4] Add client-side validation (title required)
+- [X] T109 [US4] Add success notification after update
+- [X] T110 [US4] Revert to view mode on Cancel (discard changes)
 
 ### US4 Validation
 
@@ -324,20 +324,20 @@ This task list implements all 5 user stories for Phase II in priority order. Tas
 
 ### Backend - Delete Service & API
 
-- [ ] T115 [US5] Add delete_task(task_id, user_id) function to backend/app/services/task_service.py with ownership check
-- [ ] T116 [US5] Implement DELETE /api/tasks/{task_id} endpoint in backend/app/api/tasks.py
-- [ ] T117 [US5] Add authentication check (JWT required)
-- [ ] T118 [US5] Add ownership check (return 403 if user doesn't own task, 404 if task not found)
-- [ ] T119 [US5] Return 204 No Content on successful deletion
+- [X] T115 [US5] Add delete_task(task_id, user_id) function to backend/app/services/task_service.py with ownership check
+- [X] T116 [US5] Implement DELETE /api/tasks/{task_id} endpoint in backend/app/api/tasks.py
+- [X] T117 [US5] Add authentication check (JWT required)
+- [X] T118 [US5] Add ownership check (return 403 if user doesn't own task, 404 if task not found)
+- [X] T119 [US5] Return 204 No Content on successful deletion
 
 ### Frontend - Delete Task UI
 
-- [ ] T120 [US5] Add delete button to TaskItem component
-- [ ] T121 [US5] Add confirmation dialog on delete button click
-- [ ] T122 [US5] Implement DELETE /api/tasks/{id} call on confirm
-- [ ] T123 [US5] Remove task from list state on successful deletion
-- [ ] T124 [US5] Add success notification after deletion
-- [ ] T125 [US5] Handle Cancel in confirmation dialog (no API call)
+- [X] T120 [US5] Add delete button to TaskItem component
+- [X] T121 [US5] Add confirmation dialog on delete button click
+- [X] T122 [US5] Implement DELETE /api/tasks/{id} call on confirm
+- [X] T123 [US5] Remove task from list state on successful deletion
+- [X] T124 [US5] Add success notification after deletion
+- [X] T125 [US5] Handle Cancel in confirmation dialog (no API call)
 
 ### US5 Validation
 
@@ -360,18 +360,18 @@ This task list implements all 5 user stories for Phase II in priority order. Tas
 ### Error Handling & UX
 
 - [ ] T131 [P] Add global error boundary in frontend/src/app/layout.tsx
-- [ ] T132 [P] Add loading spinners for all async operations
-- [ ] T133 [P] Add toast/notification system for success/error messages
-- [ ] T134 [P] Improve error messages (user-friendly, actionable)
-- [ ] T135 [P] Add form validation error display (inline, clear)
+- [X] T132 [P] Add loading spinners for all async operations
+- [X] T133 [P] Add toast/notification system for success/error messages
+- [X] T134 [P] Improve error messages (user-friendly, actionable)
+- [X] T135 [P] Add form validation error display (inline, clear)
 
 ### Styling & Responsiveness
 
-- [ ] T136 [P] Style landing page with Tailwind CSS
-- [ ] T137 [P] Style signup/signin forms with Tailwind CSS
-- [ ] T138 [P] Style dashboard and task list with Tailwind CSS
-- [ ] T139 [P] Ensure mobile responsiveness (test on small screens)
-- [ ] T140 [P] Add hover states and transitions for better UX
+- [X] T136 [P] Style landing page with Tailwind CSS
+- [X] T137 [P] Style signup/signin forms with Tailwind CSS
+- [X] T138 [P] Style dashboard and task list with Tailwind CSS
+- [X] T139 [P] Ensure mobile responsiveness (test on small screens)
+- [X] T140 [P] Add hover states and transitions for better UX
 
 ### Documentation
 
