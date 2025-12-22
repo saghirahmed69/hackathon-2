@@ -35,11 +35,31 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL, "http://localhost:3000"],
+    allow_origins=[
+        settings.FRONTEND_URL,
+        "http://localhost:3000",
+        "http://localhost:3001",  # Support both common Next.js ports
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add request logging middleware for debugging
+from fastapi import Request
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    """Log all requests for debugging."""
+    logger.info(f"🔍 {request.method} {request.url.path}")
+    logger.info(f"   Headers: {dict(request.headers)}")
+    response = await call_next(request)
+    logger.info(f"   Response: {response.status_code}")
+    return response
 
 
 # Health check endpoint
@@ -64,8 +84,7 @@ async def root():
 
 
 # API routers
-from app.api import auth
+from app.api import auth, tasks
 
 app.include_router(auth.router)
-
-# Additional routers will be added here (tasks, etc.)
+app.include_router(tasks.router)
