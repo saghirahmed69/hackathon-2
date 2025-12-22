@@ -177,45 +177,45 @@ This task list implements all 5 user stories for Phase II in priority order. Tas
 
 ### Backend - Task Model & Schema
 
-- [ ] T060 [P] [US2] Create Task model in backend/app/models/task.py with SQLModel (id, user_id FK, title, description, completed, created_at, updated_at)
-- [ ] T061 [P] [US2] Create task schemas in backend/app/schemas/task.py (TaskCreate, TaskResponse, TaskUpdate)
+- [X] T060 [P] [US2] Create Task model in backend/app/models/task.py with SQLModel (id, user_id FK, title, description, completed, created_at, updated_at)
+- [X] T061 [P] [US2] Create task schemas in backend/app/schemas/task.py (TaskCreate, TaskResponse, TaskUpdate)
 
 ### Backend - Task Service
 
-- [ ] T062 [US2] Create task service in backend/app/services/task_service.py
-- [ ] T063 [US2] Implement get_user_tasks(user_id) function with user isolation filter
-- [ ] T064 [US2] Implement create_task(user_id, title, description) function with validation
-- [ ] T065 [US2] Add title validation (non-empty, non-whitespace, max 1000 chars)
+- [X] T062 [US2] Create task service in backend/app/services/task_service.py
+- [X] T063 [US2] Implement get_user_tasks(user_id) function with user isolation filter
+- [X] T064 [US2] Implement create_task(user_id, title, description) function with validation
+- [X] T065 [US2] Add title validation (non-empty, non-whitespace, max 1000 chars)
 
 ### Backend - Task API (Read & Create)
 
-- [ ] T066 [US2] Create task routes in backend/app/api/tasks.py
-- [ ] T067 [US2] Implement GET /api/tasks endpoint with JWT authentication and user filtering
-- [ ] T068 [US2] Implement POST /api/tasks endpoint with JWT authentication and validation
-- [ ] T069 [US2] Add error handling for task endpoints (400, 401, 404, 500)
-- [ ] T070 [US2] Register tasks router in backend/app/main.py
+- [X] T066 [US2] Create task routes in backend/app/api/tasks.py
+- [X] T067 [US2] Implement GET /api/tasks endpoint with JWT authentication and user filtering
+- [X] T068 [US2] Implement POST /api/tasks endpoint with JWT authentication and validation
+- [X] T069 [US2] Add error handling for task endpoints (400, 401, 404, 500)
+- [X] T070 [US2] Register tasks router in backend/app/main.py
 
 ### Frontend - Task UI Components
 
-- [ ] T071 [P] [US2] Create TaskList component in frontend/src/components/tasks/TaskList.tsx to display tasks in table/list format
-- [ ] T072 [P] [US2] Create TaskItem component in frontend/src/components/tasks/TaskItem.tsx to render individual task
-- [ ] T073 [P] [US2] Create TaskForm component in frontend/src/components/tasks/TaskForm.tsx with title/description fields
-- [ ] T074 [P] [US2] Create dashboard page in frontend/src/app/dashboard/page.tsx using TaskList and TaskForm
+- [X] T071 [P] [US2] Create TaskList component in frontend/src/components/tasks/TaskList.tsx to display tasks in table/list format
+- [X] T072 [P] [US2] Create TaskItem component in frontend/src/components/tasks/TaskItem.tsx to render individual task
+- [X] T073 [P] [US2] Create TaskForm component in frontend/src/components/tasks/TaskForm.tsx with title/description fields
+- [X] T074 [P] [US2] Create dashboard page in frontend/src/app/dashboard/page.tsx using TaskList and TaskForm
 
 ### Frontend - Task Integration
 
-- [ ] T075 [US2] Implement GET /api/tasks call in dashboard page to fetch user's tasks
-- [ ] T076 [US2] Implement POST /api/tasks call in TaskForm to create new task
-- [ ] T077 [US2] Add loading state during task fetch
-- [ ] T078 [US2] Add empty state message when no tasks exist
-- [ ] T079 [US2] Add success notification after task creation
-- [ ] T080 [US2] Refresh task list after creation
+- [X] T075 [US2] Implement GET /api/tasks call in dashboard page to fetch user's tasks
+- [X] T076 [US2] Implement POST /api/tasks call in TaskForm to create new task
+- [X] T077 [US2] Add loading state during task fetch
+- [X] T078 [US2] Add empty state message when no tasks exist
+- [X] T079 [US2] Add success notification after task creation
+- [X] T080 [US2] Refresh task list after creation
 
 ### Database Migration
 
-- [ ] T081 [US2] Run SQLModel.metadata.create_all() to create tasks table in Neon PostgreSQL
-- [ ] T082 [US2] Verify tasks table schema matches data-model.md (id, user_id FK with cascade delete, title, description nullable, completed default false, timestamps)
-- [ ] T083 [US2] Verify indexes created (user_id, user_id+completed composite)
+- [X] T081 [US2] Run SQLModel.metadata.create_all() to create tasks table in Neon PostgreSQL
+- [X] T082 [US2] Verify tasks table schema matches data-model.md (id, user_id FK with cascade delete, title, description nullable, completed default false, timestamps)
+- [X] T083 [US2] Verify indexes created (user_id, user_id+completed composite)
 
 ### US2 Validation
 

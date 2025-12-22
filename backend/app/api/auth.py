@@ -12,20 +12,20 @@ from app.services.auth_service import signup, signin
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
 
-@router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/signup", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
 async def signup_endpoint(
     data: SignupRequest,
     session: AsyncSession = Depends(get_session),
-) -> UserResponse:
+) -> AuthResponse:
     """
-    Create a new user account.
+    Create a new user account and return JWT token (auto-login).
 
     Args:
         data: Signup request with email and password
         session: Database session
 
     Returns:
-        Created user data (without password)
+        Auth response with JWT token and user data
 
     Raises:
         HTTPException 409: Email already registered

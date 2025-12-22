@@ -51,16 +51,16 @@ def create_access_token(user_id: str) -> str:
     return token
 
 
-async def signup(session: AsyncSession, data: SignupRequest) -> UserResponse:
+async def signup(session: AsyncSession, data: SignupRequest) -> AuthResponse:
     """
-    Create a new user account.
+    Create a new user account and return JWT token (auto-login).
 
     Args:
         session: Database session
         data: Signup request data
 
     Returns:
-        Created user (without password)
+        Auth response with JWT token and user data
 
     Raises:
         HTTPException 409: If email already registered
@@ -85,10 +85,17 @@ async def signup(session: AsyncSession, data: SignupRequest) -> UserResponse:
     await session.commit()
     await session.refresh(user)
 
-    return UserResponse(
-        id=user.id,
-        email=user.email,
-        created_at=user.created_at.isoformat(),
+    # Create access token (auto-login after signup)
+    access_token = create_access_token(user.id)
+
+    return AuthResponse(
+        access_token=access_token,
+        token_type="bearer",
+        user=UserResponse(
+            id=user.id,
+            email=user.email,
+            created_at=user.created_at.isoformat(),
+        ),
     )
 
 
