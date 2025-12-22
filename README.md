@@ -133,6 +133,50 @@ npm run dev
 
 Frontend will be available at: `http://localhost:3000`
 
+### Environment Variables
+
+#### Backend (.env)
+
+```env
+# Database
+DATABASE_URL=postgresql+asyncpg://user:password@host/db?sslmode=require
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_ALGORITHM=HS256
+JWT_EXPIRE_MINUTES=1440
+
+# CORS
+FRONTEND_URL=http://localhost:3000
+
+# Environment
+ENVIRONMENT=development
+```
+
+**Generate Secure JWT_SECRET**:
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+#### Frontend (.env.local)
+
+```env
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:8000
+
+# Better Auth
+BETTER_AUTH_SECRET=your-super-secret-auth-key-change-this-in-production
+BETTER_AUTH_URL=http://localhost:3000
+
+# Environment
+NODE_ENV=development
+```
+
+**Generate Secure BETTER_AUTH_SECRET**:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
 #### Database Setup
 
 1. Create a Neon PostgreSQL account at [neon.tech](https://neon.tech)
@@ -162,6 +206,58 @@ This project follows **Spec-Driven Development (SDD)** methodology:
 5. ⏭️ **Testing** - Manual testing via quickstart.md scenarios
 6. ⏭️ **Deployment** - Ready for production deployment
 
+### Troubleshooting
+
+#### Backend Issues
+
+**Error: "Could not import app.main"**
+- Verify you're in the `backend/` directory
+- Ensure virtual environment is activated
+- Run `pip install -r requirements.txt`
+
+**Error: "Connection refused (database)"**
+- Check `DATABASE_URL` is correct in `.env`
+- Verify Neon database is active (not suspended)
+- Ensure `+asyncpg` is in the connection string: `postgresql+asyncpg://...`
+
+**Error: "JWT decode error"**
+- Check `JWT_SECRET` matches between frontend and backend
+- Verify token is sent in `Authorization: Bearer <token>` header
+
+**Error: "CORS error"**
+- Check `FRONTEND_URL` in backend `.env` matches frontend URL
+- Verify CORS middleware is enabled in `backend/app/main.py`
+
+#### Frontend Issues
+
+**Error: "Module not found"**
+- Run `npm install`
+- Delete `node_modules/` and `package-lock.json`, then run `npm install` again
+
+**Error: "API request failed"**
+- Check `NEXT_PUBLIC_API_URL` in `.env.local` points to `http://localhost:8000`
+- Verify backend server is running
+- Check browser console for CORS errors
+
+**Error: "Better Auth configuration error"**
+- Check `BETTER_AUTH_SECRET` is set in `.env.local`
+- Verify `BETTER_AUTH_URL` matches your frontend URL
+
+**Build Errors**
+- Run `npm run type-check` to see TypeScript errors
+- Clear Next.js cache: `rm -rf .next` and restart
+
+#### Database Issues
+
+**Tables not created**
+- Check DATABASE_URL connection string
+- Verify Neon project is active
+- Check backend logs for SQLModel errors
+
+**User data not persisting**
+- Verify you're using Neon PostgreSQL (not in-memory)
+- Check database connection in Neon dashboard
+
 ### Testing
 
 Comprehensive manual test scenarios are documented in `specs/002-web-todo-app/quickstart.md`:
@@ -187,7 +283,10 @@ Comprehensive manual test scenarios are documented in `specs/002-web-todo-app/qu
 - `PATCH /api/tasks/{id}` - Update task (title, description, or completion status)
 - `DELETE /api/tasks/{id}` - Delete task
 
-See `specs/002-web-todo-app/contracts/api-endpoints.md` for complete API documentation.
+**API Documentation**:
+- Interactive Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+- Complete specification: `specs/002-web-todo-app/contracts/api-endpoints.md`
 
 ### Security
 
