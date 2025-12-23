@@ -34,37 +34,37 @@ This task list implements all 5 user stories for Phase II in priority order. Tas
 
 ### Backend Setup
 
-- [ ] T001 Create backend directory structure per plan.md
-- [ ] T002 [P] Create backend/app/__init__.py
-- [ ] T003 [P] Create backend/app/models/__init__.py
-- [ ] T004 [P] Create backend/app/schemas/__init__.py
-- [ ] T005 [P] Create backend/app/services/__init__.py
-- [ ] T006 [P] Create backend/app/api/__init__.py
-- [ ] T007 [P] Create backend/app/middleware/__init__.py
-- [ ] T008 Create backend/requirements.txt with dependencies: fastapi, uvicorn[standard], sqlmodel, asyncpg, python-jose[cryptography], passlib[bcrypt], python-multipart, pydantic-settings
-- [ ] T009 Create backend/.env.example with DATABASE_URL, JWT_SECRET, JWT_ALGORITHM, JWT_EXPIRE_MINUTES, FRONTEND_URL, ENVIRONMENT
-- [ ] T010 Create backend/.gitignore with Python patterns: __pycache__/, *.pyc, .venv/, venv/, .env, *.log
+- [X] T001 Create backend directory structure per plan.md
+- [X] T002 [P] Create backend/app/__init__.py
+- [X] T003 [P] Create backend/app/models/__init__.py
+- [X] T004 [P] Create backend/app/schemas/__init__.py
+- [X] T005 [P] Create backend/app/services/__init__.py
+- [X] T006 [P] Create backend/app/api/__init__.py
+- [X] T007 [P] Create backend/app/middleware/__init__.py
+- [X] T008 Create backend/requirements.txt with dependencies: fastapi, uvicorn[standard], sqlmodel, asyncpg, python-jose[cryptography], passlib[bcrypt], python-multipart, pydantic-settings
+- [X] T009 Create backend/.env.example with DATABASE_URL, JWT_SECRET, JWT_ALGORITHM, JWT_EXPIRE_MINUTES, FRONTEND_URL, ENVIRONMENT
+- [X] T010 Create backend/.gitignore with Python patterns: __pycache__/, *.pyc, .venv/, venv/, .env, *.log
 
 ### Frontend Setup
 
-- [ ] T011 Create frontend directory structure per plan.md
-- [ ] T012 [P] Create frontend/src/app/layout.tsx (root layout)
-- [ ] T013 [P] Create frontend/src/app/page.tsx (landing page)
-- [ ] T014 [P] Create frontend/src/components/auth/.gitkeep
-- [ ] T015 [P] Create frontend/src/components/tasks/.gitkeep
-- [ ] T016 [P] Create frontend/src/lib/.gitkeep
-- [ ] T017 Create frontend/package.json with dependencies: next@16+, react@18+, react-dom, typescript, tailwindcss, better-auth, @types/node, @types/react, @types/react-dom
-- [ ] T018 Create frontend/tsconfig.json with Next.js TypeScript config
-- [ ] T019 Create frontend/tailwind.config.ts with Tailwind CSS configuration
-- [ ] T020 Create frontend/next.config.js with API proxy and environment config
-- [ ] T021 Create frontend/.env.local.example with NEXT_PUBLIC_API_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL, NODE_ENV
-- [ ] T022 Create frontend/.gitignore with Node.js patterns: node_modules/, .next/, dist/, *.log, .env.local
+- [X] T011 Create frontend directory structure per plan.md
+- [X] T012 [P] Create frontend/src/app/layout.tsx (root layout)
+- [X] T013 [P] Create frontend/src/app/page.tsx (landing page)
+- [X] T014 [P] Create frontend/src/components/auth/.gitkeep
+- [X] T015 [P] Create frontend/src/components/tasks/.gitkeep
+- [X] T016 [P] Create frontend/src/lib/.gitkeep
+- [X] T017 Create frontend/package.json with dependencies: next@16+, react@18+, react-dom, typescript, tailwindcss, better-auth, @types/node, @types/react, @types/react-dom
+- [X] T018 Create frontend/tsconfig.json with Next.js TypeScript config
+- [X] T019 Create frontend/tailwind.config.ts with Tailwind CSS configuration
+- [X] T020 Create frontend/next.config.js with API proxy and environment config
+- [X] T021 Create frontend/.env.local.example with NEXT_PUBLIC_API_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL, NODE_ENV
+- [X] T022 Create frontend/.gitignore with Node.js patterns: node_modules/, .next/, dist/, *.log, .env.local
 
 ### Root Configuration
 
-- [ ] T023 Create root .gitignore combining Python and Node.js patterns
-- [ ] T024 Create root README.md with project overview and setup instructions
-- [ ] T025 Create root .editorconfig for consistent code style
+- [X] T023 Create root .gitignore combining Python and Node.js patterns
+- [X] T024 Create root README.md with project overview and setup instructions
+- [X] T025 Create root .editorconfig for consistent code style
 
 ---
 
@@ -78,18 +78,18 @@ This task list implements all 5 user stories for Phase II in priority order. Tas
 
 ### Backend Foundational
 
-- [ ] T026 Create backend/app/config.py with Pydantic settings for environment variables
-- [ ] T027 Create backend/app/database.py with SQLModel async engine and session management
-- [ ] T028 Create backend/app/main.py with FastAPI app initialization, CORS middleware, and startup/shutdown events
-- [ ] T029 Add health check endpoint GET /health in backend/app/main.py
-- [ ] T030 Create backend/app/middleware/jwt_middleware.py with JWT verification dependency get_current_user()
+- [X] T026 Create backend/app/config.py with Pydantic settings for environment variables
+- [X] T027 Create backend/app/database.py with SQLModel async engine and session management
+- [X] T028 Create backend/app/main.py with FastAPI app initialization, CORS middleware, and startup/shutdown events
+- [X] T029 Add health check endpoint GET /health in backend/app/main.py
+- [X] T030 Create backend/app/middleware/jwt_middleware.py with JWT verification dependency get_current_user()
 
 ### Frontend Foundational
 
-- [ ] T031 Create frontend/src/lib/types.ts with User and Task TypeScript interfaces
-- [ ] T032 Create frontend/src/lib/api.ts with API client wrapper (fetch with base URL and auth headers)
-- [ ] T033 Create frontend/src/lib/auth.ts with Better Auth configuration
-- [ ] T034 Create frontend/src/middleware.ts with route protection logic (redirect unauthenticated users)
+- [X] T031 Create frontend/src/lib/types.ts with User and Task TypeScript interfaces
+- [X] T032 Create frontend/src/lib/api.ts with API client wrapper (fetch with base URL and auth headers)
+- [X] T033 Create frontend/src/lib/auth.ts with Better Auth configuration
+- [X] T034 Create frontend/src/middleware.ts with route protection logic (redirect unauthenticated users)
 
 ---
 
