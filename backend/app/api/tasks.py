@@ -2,9 +2,9 @@
 Task API routes for CRUD operations.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
+from typing import List, Optional, Literal
 
 from app.database import get_session
 from app.schemas.task import TaskCreate, TaskUpdate, TaskResponse
@@ -20,23 +20,48 @@ router = APIRouter(prefix="/api/tasks", tags=["Tasks"])
 async def get_tasks(
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
+    # Phase III: Query parameters for search, filter, sort
+    search: Optional[str] = Query(None, max_length=500),
+    status: Optional[Literal['pending', 'completed']] = Query(None),
+    priority: Optional[Literal['high', 'medium', 'low']] = Query(None),
+    due_date: Optional[str] = Query(None),
+    sort_by: Optional[Literal['due_date', 'priority', 'title']] = Query(None),
+    sort_order: Optional[Literal['asc', 'desc']] = Query('asc'),
 ) -> List[TaskResponse]:
     """
-    Get all tasks for the authenticated user.
+    Get all tasks for the authenticated user with optional filtering, sorting, and search.
+
+    Phase III Query Parameters:
+        - search: Keyword search in title/description (case-insensitive, substring matching)
+        - status: Filter by 'pending' or 'completed'
+        - priority: Filter by 'high', 'medium', or 'low'
+        - due_date: Filter by due date ('before:YYYY-MM-DD', 'after:YYYY-MM-DD', 'on:YYYY-MM-DD')
+        - sort_by: Sort field ('due_date', 'priority', 'title')
+        - sort_order: Sort direction ('asc' or 'desc', default 'asc')
 
     Args:
         current_user: Authenticated user from JWT token
         session: Database session
 
     Returns:
-        List of user's tasks
+        List of user's tasks (filtered, sorted, searched)
 
     Raises:
+        HTTPException 400: If query parameters are invalid
         HTTPException 401: If not authenticated
         HTTPException 500: If server error occurs
     """
     try:
-        tasks = await task_service.get_user_tasks(session, current_user.id)
+        tasks = await task_service.get_user_tasks_filtered(
+            session=session,
+            user_id=current_user.id,
+            search=search,
+            status=status,
+            priority=priority,
+            due_date=due_date,
+            sort_by=sort_by,
+            sort_order=sort_order,
+        )
         return [
             TaskResponse(
                 id=task.id,
@@ -46,6 +71,12 @@ async def get_tasks(
                 completed=task.completed,
                 created_at=task.created_at.isoformat(),
                 updated_at=task.updated_at.isoformat() if task.updated_at else None,
+                # Phase III: Advanced fields
+                priority=task.priority,
+                due_date=task.due_date.isoformat() if task.due_date else None,
+                is_recurring=task.is_recurring,
+                recurrence_pattern=task.recurrence_pattern,
+                reminder_time=task.reminder_time.isoformat() if task.reminder_time else None,
             )
             for task in tasks
         ]
@@ -90,6 +121,12 @@ async def create_task(
             completed=task.completed,
             created_at=task.created_at.isoformat(),
             updated_at=task.updated_at.isoformat() if task.updated_at else None,
+            # Phase III: Advanced fields
+            priority=task.priority,
+            due_date=task.due_date.isoformat() if task.due_date else None,
+            is_recurring=task.is_recurring,
+            recurrence_pattern=task.recurrence_pattern,
+            reminder_time=task.reminder_time.isoformat() if task.reminder_time else None,
         )
     except HTTPException:
         raise
@@ -143,6 +180,12 @@ async def update_task(
             completed=task.completed,
             created_at=task.created_at.isoformat(),
             updated_at=task.updated_at.isoformat() if task.updated_at else None,
+            # Phase III: Advanced fields
+            priority=task.priority,
+            due_date=task.due_date.isoformat() if task.due_date else None,
+            is_recurring=task.is_recurring,
+            recurrence_pattern=task.recurrence_pattern,
+            reminder_time=task.reminder_time.isoformat() if task.reminder_time else None,
         )
     except HTTPException:
         raise
