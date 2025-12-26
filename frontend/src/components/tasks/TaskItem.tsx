@@ -4,8 +4,72 @@
 
 'use client'
 
-import { Task } from '@/lib/types'
+import { Task, PriorityLevel } from '@/lib/types'
 import { useState } from 'react'
+import PrioritySelector from './PrioritySelector'
+import DateTimePicker from './DateTimePicker'
+
+// Priority badge styling (Phase III: FR-005)
+const getPriorityBadgeStyles = (priority: PriorityLevel) => {
+  switch (priority) {
+    case 'high':
+      return 'bg-red-100 text-red-800 border-red-200'
+    case 'medium':
+      return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+    case 'low':
+      return 'bg-green-100 text-green-800 border-green-200'
+  }
+}
+
+const getPriorityIcon = (priority: PriorityLevel) => {
+  switch (priority) {
+    case 'high':
+      return '🔴'
+    case 'medium':
+      return '🟡'
+    case 'low':
+      return '🟢'
+  }
+}
+
+// Due date indicator helpers (Phase III: FR-015, FR-016)
+const isOverdue = (dueDate: string | null, completed: boolean): boolean => {
+  if (!dueDate || completed) return false
+  return new Date(dueDate) < new Date()
+}
+
+const isDueToday = (dueDate: string | null, completed: boolean): boolean => {
+  if (!dueDate || completed) return false
+  const due = new Date(dueDate)
+  const today = new Date()
+  return (
+    due.getFullYear() === today.getFullYear() &&
+    due.getMonth() === today.getMonth() &&
+    due.getDate() === today.getDate()
+  )
+}
+
+const formatDueDate = (dueDate: string | null): string | null => {
+  if (!dueDate) return null
+  const date = new Date(dueDate)
+  const hasTime = dueDate.includes('T') && !dueDate.endsWith('T00:00:00')
+
+  if (hasTime) {
+    return date.toLocaleString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    })
+  } else {
+    return date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
+  }
+}
 
 interface TaskItemProps {
   task: Task
@@ -17,7 +81,16 @@ export default function TaskItem({ task, onUpdate, onDelete }: TaskItemProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(task.title)
   const [editDescription, setEditDescription] = useState(task.description || '')
+  const [editPriority, setEditPriority] = useState<PriorityLevel>(task.priority)
+  const [editDueDate, setEditDueDate] = useState<string | null>(task.due_date)
+  const [editIsRecurring, setEditIsRecurring] = useState(task.is_recurring)
+  const [editRecurrencePattern, setEditRecurrencePattern] = useState(task.recurrence_pattern)
+  const [editReminderTime, setEditReminderTime] = useState<string | null>(task.reminder_time)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  // Phase III: Check due date status
+  const taskIsOverdue = isOverdue(task.due_date, task.completed)
+  const taskIsDueToday = isDueToday(task.due_date, task.completed)
 
   const handleSave = () => {
     if (!editTitle.trim()) {
@@ -28,6 +101,8 @@ export default function TaskItem({ task, onUpdate, onDelete }: TaskItemProps) {
     onUpdate({
       title: editTitle.trim(),
       description: editDescription.trim() || null,
+      priority: editPriority, // Phase III: Include priority
+      due_date: editDueDate, // Phase III: Include due_date
     })
     setIsEditing(false)
   }
@@ -35,6 +110,8 @@ export default function TaskItem({ task, onUpdate, onDelete }: TaskItemProps) {
   const handleCancel = () => {
     setEditTitle(task.title)
     setEditDescription(task.description || '')
+    setEditPriority(task.priority)
+    setEditDueDate(task.due_date)
     setIsEditing(false)
   }
 
@@ -77,6 +154,20 @@ export default function TaskItem({ task, onUpdate, onDelete }: TaskItemProps) {
               maxLength={10000}
             />
           </div>
+          {/* Phase III: Priority Selector in Edit Mode */}
+          <PrioritySelector
+            value={editPriority}
+            onChange={setEditPriority}
+            required={true}
+          />
+          {/* Phase III: Due Date Picker in Edit Mode */}
+          <DateTimePicker
+            label="Due Date"
+            value={editDueDate}
+            onChange={setEditDueDate}
+            required={false}
+            includeTime={true}
+          />
           <div className="flex gap-2">
             <button
               onClick={handleSave}
@@ -97,7 +188,15 @@ export default function TaskItem({ task, onUpdate, onDelete }: TaskItemProps) {
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow">
+    <div
+      className={`bg-white p-4 rounded-lg shadow border-2 hover:shadow-md transition-shadow ${
+        taskIsOverdue
+          ? 'border-red-300 bg-red-50'
+          : taskIsDueToday
+          ? 'border-yellow-300 bg-yellow-50'
+          : 'border-gray-200'
+      }`}
+    >
       <div className="flex items-start gap-3">
         {/* Checkbox for completion */}
         <input
@@ -109,6 +208,42 @@ export default function TaskItem({ task, onUpdate, onDelete }: TaskItemProps) {
 
         {/* Task content */}
         <div className="flex-1 min-w-0">
+          {/* Phase III: Priority and Due Date Badges */}
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            <span
+              className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${getPriorityBadgeStyles(
+                task.priority
+              )}`}
+            >
+              {getPriorityIcon(task.priority)} {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+            </span>
+            {/* Phase III: Due Date Badge (FR-015, FR-016) */}
+            {task.due_date && (
+              <span
+                className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${
+                  taskIsOverdue
+                    ? 'bg-red-100 text-red-800 border-red-300'
+                    : taskIsDueToday
+                    ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                    : 'bg-blue-100 text-blue-800 border-blue-200'
+                }`}
+              >
+                {taskIsOverdue ? '⚠️ Overdue' : taskIsDueToday ? '📅 Due Today' : '📅'} {formatDueDate(task.due_date)}
+              </span>
+            )}
+            {/* Phase III: Recurring Badge */}
+            {task.is_recurring && (
+              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border bg-purple-100 text-purple-800 border-purple-200">
+                🔁 {task.recurrence_pattern}
+              </span>
+            )}
+            {/* Phase III: Reminder Badge */}
+            {task.reminder_time && !task.completed && (
+              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border bg-indigo-100 text-indigo-800 border-indigo-200">
+                🔔 Reminder
+              </span>
+            )}
+          </div>
           <h3
             className={`text-lg font-medium ${
               task.completed ? 'line-through text-gray-500' : 'text-gray-900'

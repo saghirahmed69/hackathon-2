@@ -8,9 +8,14 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api'
 import { auth } from '@/lib/auth'
-import { Task, TaskCreateRequest } from '@/lib/types'
+import { Task, TaskCreateRequest, TaskFilterParams } from '@/lib/types'
 import TaskList from '@/components/tasks/TaskList'
 import TaskForm from '@/components/tasks/TaskForm'
+import SearchBar from '@/components/tasks/SearchBar'
+import FilterControls from '@/components/tasks/FilterControls'
+import SortControls from '@/components/tasks/SortControls'
+import { useTaskFilters } from '@/hooks/useTaskFilters'
+import { useDebounce } from '@/hooks/useDebounce'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -26,6 +31,10 @@ export default function DashboardPage() {
     setIsMounted(true)
   }, [])
 
+  // Phase III: Filter, search, sort state
+  const filters = useTaskFilters()
+  const debouncedSearch = useDebounce(filters.search, 300)
+
   // Check authentication
   useEffect(() => {
     if (isMounted && !auth.isAuthenticated()) {
@@ -33,19 +42,32 @@ export default function DashboardPage() {
     }
   }, [router, isMounted])
 
-  // Fetch tasks on mount
+  // Fetch tasks on mount and when filters change
   useEffect(() => {
     if (isMounted) {
       fetchTasks()
     }
-  }, [isMounted])
+  }, [isMounted, debouncedSearch, filters.status, filters.priority, filters.dueDate, filters.sortBy, filters.sortOrder])
 
   const fetchTasks = async () => {
     setIsLoading(true)
     setError(null)
 
     try {
-      const data = await api.get<Task[]>('/api/tasks')
+      // Phase III: Build query string with filters
+      const filterParams = filters.getFilterParams()
+      const queryParams = new URLSearchParams()
+
+      Object.entries(filterParams).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          queryParams.append(key, String(value))
+        }
+      })
+
+      const queryString = queryParams.toString()
+      const endpoint = queryString ? `/api/tasks?${queryString}` : '/api/tasks'
+
+      const data = await api.get<Task[]>(endpoint)
       setTasks(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch tasks')
@@ -209,32 +231,60 @@ export default function DashboardPage() {
           </div>
 
           {/* Task list */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-4">
+            {/* Phase III: Search Bar */}
+            <SearchBar
+              value={filters.search}
+              onChange={filters.setSearch}
+              placeholder="Search tasks by title or description..."
+            />
+
+            {/* Phase III: Filter Controls */}
+            <FilterControls
+              status={filters.status}
+              onStatusChange={filters.setStatus}
+              priority={filters.priority}
+              onPriorityChange={filters.setPriority}
+              dueDate={filters.dueDate}
+              onDueDateChange={filters.setDueDate}
+              onClearFilters={filters.clearFilters}
+              hasActiveFilters={filters.hasActiveFilters}
+            />
+
             <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">
                   Your Tasks ({tasks.length})
                 </h2>
-                <button
-                  onClick={fetchTasks}
-                  disabled={isLoading}
-                  className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
-                  title="Refresh tasks"
-                >
-                  <svg
-                    className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                <div className="flex items-center gap-4">
+                  {/* Phase III: Sort Controls */}
+                  <SortControls
+                    sortBy={filters.sortBy}
+                    onSortByChange={filters.setSortBy}
+                    sortOrder={filters.sortOrder}
+                    onSortOrderChange={filters.setSortOrder}
+                  />
+                  <button
+                    onClick={fetchTasks}
+                    disabled={isLoading}
+                    className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
+                    title="Refresh tasks"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
 
               {isLoading ? (

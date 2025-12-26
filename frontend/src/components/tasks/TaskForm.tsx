@@ -5,7 +5,9 @@
 'use client'
 
 import { useState } from 'react'
-import { TaskCreateRequest } from '@/lib/types'
+import { TaskCreateRequest, PriorityLevel, RecurrencePattern } from '@/lib/types'
+import PrioritySelector from './PrioritySelector'
+import DateTimePicker from './DateTimePicker'
 
 interface TaskFormProps {
   onSubmit: (data: TaskCreateRequest) => Promise<void>
@@ -15,6 +17,11 @@ interface TaskFormProps {
 export default function TaskForm({ onSubmit, isLoading = false }: TaskFormProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [priority, setPriority] = useState<PriorityLevel>('medium')
+  const [dueDate, setDueDate] = useState<string | null>(null)
+  const [isRecurring, setIsRecurring] = useState(false)
+  const [recurrencePattern, setRecurrencePattern] = useState<RecurrencePattern | null>(null)
+  const [reminderTime, setReminderTime] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,11 +48,21 @@ export default function TaskForm({ onSubmit, isLoading = false }: TaskFormProps)
       await onSubmit({
         title: title.trim(),
         description: description.trim() || undefined,
+        priority,
+        due_date: dueDate,
+        is_recurring: isRecurring,
+        recurrence_pattern: recurrencePattern,
+        reminder_time: reminderTime,
       })
 
       // Clear form on success
       setTitle('')
       setDescription('')
+      setPriority('medium')
+      setDueDate(null)
+      setIsRecurring(false)
+      setRecurrencePattern(null)
+      setReminderTime(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create task')
     }
@@ -100,6 +117,62 @@ export default function TaskForm({ onSubmit, isLoading = false }: TaskFormProps)
             {description.length}/10,000 characters
           </p>
         </div>
+
+        {/* Phase III: Priority Selector */}
+        <PrioritySelector
+          value={priority}
+          onChange={setPriority}
+          required={true}
+        />
+
+        {/* Phase III: Due Date Picker */}
+        <DateTimePicker
+          label="Due Date"
+          value={dueDate}
+          onChange={setDueDate}
+          required={false}
+          includeTime={true}
+        />
+
+        {/* Phase III: Recurring Task Options */}
+        <div className="space-y-2">
+          <div className="flex items-center">
+            <input
+              id="is_recurring"
+              type="checkbox"
+              checked={isRecurring}
+              onChange={(e) => {
+                setIsRecurring(e.target.checked)
+                if (!e.target.checked) setRecurrencePattern(null)
+              }}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label htmlFor="is_recurring" className="ml-2 text-sm text-gray-700">
+              Recurring task
+            </label>
+          </div>
+          {isRecurring && (
+            <select
+              value={recurrencePattern || ''}
+              onChange={(e) => setRecurrencePattern((e.target.value || null) as RecurrencePattern | null)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select pattern</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          )}
+        </div>
+
+        {/* Phase III: Reminder Time */}
+        <DateTimePicker
+          label="Reminder"
+          value={reminderTime}
+          onChange={setReminderTime}
+          required={false}
+          includeTime={true}
+        />
 
         <button
           type="submit"
