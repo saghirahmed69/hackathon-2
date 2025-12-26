@@ -125,7 +125,7 @@ export default function TaskItem({ task, onUpdate, onDelete }: TaskItemProps) {
               {task.description}
             </p>
           )}
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs text-gray-400" suppressHydrationWarning>
             Created: {new Date(task.created_at).toLocaleString()}
             {task.updated_at && ` • Updated: ${new Date(task.updated_at).toLocaleString()}`}
           </p>
